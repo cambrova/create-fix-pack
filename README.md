@@ -10,6 +10,7 @@ Each fix knows which Create issue it fixes. When a Create release fixes that bug
 | `gaugeNoOverRequest` | [#9987](https://github.com/Creators-of-Create/Create/issues/9987) | Factory gauges ordered more than their target, because packagers counted items as arrived when some were taken out. |
 | `gaugeSingleplayerCountOnce` (experimental, off) | #9987 | In singleplayer, packager arrivals were counted twice. |
 | `gaugeForgetStockWhileBlind` (experimental, off) | #9987 | A packager that briefly couldn't see its inventory counted everything in it as new afterwards. |
+| `linkKeepsWaitingLinks` (experimental, off) | [#5009](https://github.com/Creators-of-Create/Create/issues/5009) | Redstone links in a chunk that was briefly not fully loaded were dropped from their frequency for good, so receivers stopped following their transmitter. |
 
 Experimental fixes have no passing test yet, so they start switched off. They get switched on once they are tested.
 
