@@ -69,18 +69,25 @@ public class LinkTests {
 			CreateFixPack.LINK_KEEPS_WAITING_LINKS.enabled = fixed;
 			level.setChunkForced(far.x, far.z, false);
 		});
-		helper.runAtTickTime(34, () -> {
-			wasHalfLoaded[0] = !level.isLoaded(receiver);
-			var link = com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour.get(be[0], com.simibubi.create.content.redstone.link.LinkBehaviour.TYPE);
-			System.out.println("[create_fix_pack] link debug t14: removed " + be[0].isRemoved() + " chunkUnloaded " + be[0].isChunkUnloaded()
-				+ " inNetwork " + (link != null && com.simibubi.create.Create.REDSTONE_LINK_NETWORK_HANDLER.getNetworkOf(level, link).contains(link)));
-			// the transmitter switches on while the receiver's chunk is half loaded
-			helper.setBlock(POWER, Blocks.REDSTONE_BLOCK);
-		});
-		helper.runAtTickTime(36, () -> level.setChunkForced(far.x, far.z, true));
-		helper.runAtTickTime(44, () -> helper.setBlock(POWER, Blocks.AIR));
-		helper.runAtTickTime(50, () -> helper.setBlock(POWER, Blocks.REDSTONE_BLOCK));
-		helper.runAtTickTime(60, () -> {
+		// wait for the chunk to drop to half loaded, then switch the transmitter on and load the chunk fully again
+		int[] reforcedAt = {-1};
+		for (int t = 31; t < 90; t++) {
+			int tick = t;
+			helper.runAtTickTime(t, () -> {
+				if (reforcedAt[0] >= 0 || be[0] == null) return;
+				if (!level.isLoaded(receiver) && !be[0].isRemoved()) {
+					wasHalfLoaded[0] = true;
+					helper.setBlock(POWER, Blocks.REDSTONE_BLOCK);
+					level.setChunkForced(far.x, far.z, true);
+					reforcedAt[0] = tick;
+				} else if (tick == 89) {
+					reforcedAt[0] = tick;
+				}
+			});
+		}
+		helper.runAtTickTime(100, () -> helper.setBlock(POWER, Blocks.AIR));
+		helper.runAtTickTime(106, () -> helper.setBlock(POWER, Blocks.REDSTONE_BLOCK));
+		helper.runAtTickTime(116, () -> {
 			boolean same = level.getBlockEntity(receiver) == be[0];
 			var link2 = com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour.get(be[0], com.simibubi.create.content.redstone.link.LinkBehaviour.TYPE);
 			System.out.println("[create_fix_pack] link debug t40: removed " + be[0].isRemoved() + " chunkUnloaded " + be[0].isChunkUnloaded()
@@ -106,12 +113,12 @@ public class LinkTests {
 		void check(int signal);
 	}
 
-	@GameTest(template = "empty", timeoutTicks = 100, batch = "link_fixed")
+	@GameTest(template = "empty", timeoutTicks = 140, batch = "link_fixed")
 	public static void receiverFollowsAfterHalfLoad(GameTestHelper helper) {
 		run(helper, true, 0, signal -> helper.assertTrue(signal == 15, "the receiver reads " + signal + ", the transmitter sends 15"));
 	}
 
-	@GameTest(template = "empty", timeoutTicks = 100, batch = "link_control")
+	@GameTest(template = "empty", timeoutTicks = 140, batch = "link_control")
 	public static void linkControlReproducesBug(GameTestHelper helper) {
 		// without the fix the receiver must have lost its frequency, or this test can't tell the fix works
 		run(helper, false, 1, signal -> helper.assertTrue(signal == 0, "the receiver still follows without the fix (" + signal + "): the bug did not reproduce"));
