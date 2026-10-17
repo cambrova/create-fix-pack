@@ -1,0 +1,37 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "MIT"
+issueTrackerURL = "https://github.com/traelmyx/create-fix-pack/issues"
+
+[[mods]]
+modId = "${id}"
+version = "${version}"
+displayName = "${name}"
+authors = "traelmyx"
+logoFile = "assets/create_fix_pack/icon.png"
+displayTest = "IGNORE_ALL_VERSION"
+description = '''Fixes for long-standing Create bugs, each with its own switch. Each fix turns itself off on Create versions that fix the bug themselves.'''
+
+[[mixins]]
+config = "create_fix_pack.mixins.json"
+
+[[dependencies.${id}]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,1.21.2)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${id}]]
+modId = "create"
+type = "required"
+versionRange = "[6.0.0,)"
+ordering = "AFTER"
+side = "BOTH"
