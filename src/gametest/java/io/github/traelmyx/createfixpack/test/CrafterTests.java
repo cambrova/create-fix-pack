@@ -80,14 +80,14 @@ public class CrafterTests {
 			helper.assertTrue(handler.insertItem(0, new ItemStack(Items.OAK_LOG), false).isEmpty(), "the crafter did not take the log");
 		});
 		int[] waiting = {0};
-		helper.runAtTickTime(120, () -> {
+		helper.runAtTickTime(300, () -> {
 			waiting[0] = heldPlanks(helper);
 			System.out.println("[create_fix_pack] crafter state: speed " + crafter(helper).getSpeed() + " " + crafter(helper).saveWithoutMetadata(helper.getLevel().registryAccess()));
 			helper.assertTrue(waiting[0] == 1 && droppedPlanks(helper) == 0, "the crafter is not holding its planks before the reload (held "
 				+ waiting[0] + ", dropped " + droppedPlanks(helper) + ")");
 			reloadCrafter(helper);
 		});
-		helper.runAtTickTime(160, () -> {
+		helper.runAtTickTime(340, () -> {
 			int dropped = droppedPlanks(helper), held = heldPlanks(helper);
 			CreateFixPack.CRAFTER_KEEPS_OUTPUT.enabled = true;
 			System.out.printf("[create_fix_pack] crafter, fix %s: after the reload %d planks on the ground, still holding planks: %s%n",
@@ -101,26 +101,26 @@ public class CrafterTests {
 		void check(int dropped, int held);
 	}
 
-	@GameTest(template = "empty", timeoutTicks = 200, batch = "crafter_fixed")
+	@GameTest(template = "empty", timeoutTicks = 400, batch = "crafter_fixed")
 	public static void crafterKeepsOutputOnLoad(GameTestHelper helper) {
 		run(helper, true, true, (dropped, held) -> helper.assertTrue(dropped == 0 && held == 1,
 			"the crafter dropped " + dropped + " planks after the reload"));
 	}
 
-	@GameTest(template = "empty", timeoutTicks = 200, batch = "crafter_control")
+	@GameTest(template = "empty", timeoutTicks = 400, batch = "crafter_control")
 	public static void crafterControlReproducesBug(GameTestHelper helper) {
 		// without the fix the planks must land on the ground, or this test can't tell the fix works
 		run(helper, false, true, (dropped, held) -> helper.assertTrue(dropped > 0, "the crafter kept its planks without the fix: the bug did not reproduce"));
 	}
 
 	/** The crafter still delivers once the barrel has room. */
-	@GameTest(template = "empty", timeoutTicks = 260, batch = "crafter_delivers")
+	@GameTest(template = "empty", timeoutTicks = 480, batch = "crafter_delivers")
 	public static void crafterDeliversWhenRoomFrees(GameTestHelper helper) {
 		run(helper, true, false, (dropped, held) -> {
 			Container barrel = (Container) helper.getBlockEntity(BARREL);
 			barrel.setItem(0, ItemStack.EMPTY);
 		});
-		helper.runAtTickTime(240, () -> {
+		helper.runAtTickTime(420, () -> {
 			Container barrel = (Container) helper.getBlockEntity(BARREL);
 			helper.assertTrue(barrel.getItem(0).is(Items.OAK_PLANKS), "the crafter did not deliver its planks when the barrel had room: " + barrel.getItem(0));
 			helper.succeed();

@@ -52,11 +52,14 @@ public class GaugeTests {
 			helper.assertTrue(inventory != null, "the packager does not see the barrel");
 			inventory.insertItem(0, new ItemStack(Items.IRON_INGOT, 10), false);
 			packager.triggerStockCheck();
+			System.out.println("[create_fix_pack] gauge debug: summary after 10 in: " + packager.getAvailableItems().getCountOf(new ItemStack(Items.IRON_INGOT)) + " inv " + inventory.getClass().getName());
 			queue[0].add(new RequestPromise(new BigItemStack(new ItemStack(Items.IRON_INGOT), 64)));
 			// the 10 ingots are taken out of their slot, and 16 others arrive in the next one
 			inventory.extractItem(0, 10, false);
 			inventory.insertItem(1, new ItemStack(Items.IRON_INGOT, 16), false);
+			System.out.println("[create_fix_pack] gauge debug: cached summary before second check: " + packager.getAvailableItems().getCountOf(new ItemStack(Items.IRON_INGOT)));
 			packager.triggerStockCheck();
+			System.out.println("[create_fix_pack] gauge debug: summary after: " + packager.getAvailableItems().getCountOf(new ItemStack(Items.IRON_INGOT)));
 			int promised = queue[0].getTotalPromisedAndRemoveExpired(new ItemStack(Items.IRON_INGOT), -1);
 			CreateFixPack.GAUGE_NO_OVER_REQUEST.enabled = true;
 			queue[0].forceClear(new ItemStack(Items.IRON_INGOT));
