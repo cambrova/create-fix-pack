@@ -30,11 +30,13 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 public class CrafterTests {
 	public static final String MOD_ID = "create_fix_pack_gametest";
 
-	private static final BlockPos MOTOR = new BlockPos(2, 1, 3), CRAFTER = new BlockPos(2, 1, 2), BARREL = new BlockPos(2, 2, 2);
+	private static final BlockPos MOTOR = new BlockPos(1, 1, 3), COG = new BlockPos(1, 1, 2), CRAFTER = new BlockPos(2, 1, 2), BARREL = new BlockPos(2, 2, 2);
 
 	private static void build(GameTestHelper helper) {
 		for (int x = 0; x < 8; x++) for (int z = 0; z < 8; z++) helper.setBlock(new BlockPos(x, 0, z), Blocks.STONE);
+		// crafters turn like cogwheels: the motor drives a cogwheel beside the crafter
 		helper.setBlock(MOTOR, AllBlocks.CREATIVE_MOTOR.getDefaultState().setValue(BlockStateProperties.FACING, Direction.NORTH));
+		helper.setBlock(COG, AllBlocks.COGWHEEL.getDefaultState().setValue(BlockStateProperties.AXIS, Direction.Axis.Z));
 		helper.setBlock(CRAFTER, AllBlocks.MECHANICAL_CRAFTER.getDefaultState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH));
 		helper.setBlock(BARREL, Blocks.BARREL);
 		Container barrel = (Container) helper.getBlockEntity(BARREL);

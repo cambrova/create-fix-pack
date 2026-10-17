@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -41,20 +40,22 @@ public class GaugeTests {
 
 	private static void run(GameTestHelper helper, boolean fixed, Check check) {
 		build(helper);
-		Container barrel = (Container) helper.getBlockEntity(BARREL);
 		RequestPromiseQueue[] queue = {null};
 		helper.runAtTickTime(5, () -> {
 			PackagerLinkBlockEntity link = helper.getBlockEntity(LINK);
 			queue[0] = Create.LOGISTICS.getQueuedPromises(link.behaviour.freqId);
 			helper.assertTrue(queue[0] != null, "the stock link has no network");
 			CreateFixPack.GAUGE_NO_OVER_REQUEST.enabled = fixed;
-			barrel.setItem(0, new ItemStack(Items.IRON_INGOT, 10));
 			PackagerBlockEntity packager = helper.getBlockEntity(PACKAGER);
+			// change the barrel through the packager's own view of it, as other blocks and players do
+			var inventory = packager.targetInventory.getInventory();
+			helper.assertTrue(inventory != null, "the packager does not see the barrel");
+			inventory.insertItem(0, new ItemStack(Items.IRON_INGOT, 10), false);
 			packager.triggerStockCheck();
 			queue[0].add(new RequestPromise(new BigItemStack(new ItemStack(Items.IRON_INGOT), 64)));
 			// the 10 ingots are taken out of their slot, and 16 others arrive in the next one
-			barrel.removeItem(0, 10);
-			barrel.setItem(1, new ItemStack(Items.IRON_INGOT, 16));
+			inventory.extractItem(0, 10, false);
+			inventory.insertItem(1, new ItemStack(Items.IRON_INGOT, 16), false);
 			packager.triggerStockCheck();
 			int promised = queue[0].getTotalPromisedAndRemoveExpired(new ItemStack(Items.IRON_INGOT), -1);
 			CreateFixPack.GAUGE_NO_OVER_REQUEST.enabled = true;
