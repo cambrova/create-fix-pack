@@ -4,7 +4,9 @@
 	"package": "io.github.traelmyx.createfixpack.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"MechanicalCrafterBlockEntityMixin"
+		"InventorySummaryMixin",
+		"MechanicalCrafterBlockEntityMixin",
+		"PackagerBlockEntityMixin"
 	],
 	"injectors": {
 		"defaultRequire": 0

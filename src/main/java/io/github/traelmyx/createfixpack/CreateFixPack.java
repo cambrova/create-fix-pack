@@ -31,6 +31,8 @@ public class CreateFixPack {
 
 	public static final Fix CRAFTER_KEEPS_OUTPUT = fix("crafterKeepsOutput", "4510", null,
 		"Mechanical crafters waiting to put their result into a full inventory no longer drop it on the ground when the world loads.");
+	public static final Fix GAUGE_NO_OVER_REQUEST = fix("gaugeNoOverRequest", "9987", null,
+		"Factory gauges no longer order more than their target because the packager counted arrivals that weren't new.");
 
 	public static final class Fix {
 		public final String key, issue, description;
