@@ -33,6 +33,8 @@ public class CreateFixPack {
 		"Mechanical crafters waiting to put their result into a full inventory no longer drop it on the ground when the world loads.");
 	public static final Fix GAUGE_NO_OVER_REQUEST = fix("gaugeNoOverRequest", "9987", null,
 		"Factory gauges no longer order more than their target because the packager counted items as arrived when some were taken out.");
+	public static final Fix EJECTOR_TAKES_STACKS = fix("ejectorTakesStacks", "7681", null,
+		"Empty weighted ejectors accept more than one item at a time, so brass funnels set to a stack can feed them.");
 	public static final Fix LINK_KEEPS_WAITING_LINKS = experimental(fix("linkKeepsWaitingLinks", "5009", null,
 		"Experimental, the bug itself is not reproduced by a test yet. Redstone links in a chunk that is briefly not fully loaded are no longer dropped from their frequency for good. Turn on if receivers stop following their transmitter after chunks reload."));
 	public static final Fix GAUGE_SINGLEPLAYER_ONCE = experimental(fix("gaugeSingleplayerCountOnce", "9987", null,

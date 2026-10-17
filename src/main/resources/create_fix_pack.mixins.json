@@ -4,6 +4,7 @@
 	"package": "io.github.traelmyx.createfixpack.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
+		"DepotBehaviourMixin",
 		"InventorySummaryMixin",
 		"MechanicalCrafterBlockEntityMixin",
 		"PackagerBlockEntityMixin",
