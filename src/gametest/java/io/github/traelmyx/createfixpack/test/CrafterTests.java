@@ -82,7 +82,6 @@ public class CrafterTests {
 		int[] waiting = {0};
 		helper.runAtTickTime(300, () -> {
 			waiting[0] = heldPlanks(helper);
-			System.out.println("[create_fix_pack] crafter state: speed " + crafter(helper).getSpeed() + " " + crafter(helper).saveWithoutMetadata(helper.getLevel().registryAccess()));
 			helper.assertTrue(waiting[0] == 1 && droppedPlanks(helper) == 0, "the crafter is not holding its planks before the reload (held "
 				+ waiting[0] + ", dropped " + droppedPlanks(helper) + ")");
 			reloadCrafter(helper);
