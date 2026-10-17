@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0
+
+- Empty weighted ejectors take more than one item at a time, so brass funnels set to a stack can feed them (Create #7681).
+
 ## 1.0.2
 
 - New experimental switch `linkKeepsWaitingLinks` (off by default) for Create #5009: turn it on if Redstone Link receivers stop following their transmitter after chunks reload.

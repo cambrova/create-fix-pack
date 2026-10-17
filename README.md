@@ -8,6 +8,7 @@ Each fix knows which Create issue it fixes. When a Create release fixes that bug
 |---|---|---|
 | `crafterKeepsOutput` | [#4510](https://github.com/Creators-of-Create/Create/issues/4510) | Mechanical crafters waiting to put their result into a full inventory dropped it on the ground when the world loaded. |
 | `gaugeNoOverRequest` | [#9987](https://github.com/Creators-of-Create/Create/issues/9987) | Factory gauges ordered more than their target, because packagers counted items as arrived when some were taken out. |
+| `ejectorTakesStacks` | [#7681](https://github.com/Creators-of-Create/Create/issues/7681) | Empty weighted ejectors took only one item at a time, so brass funnels set to more than one couldn't feed them. |
 | `gaugeSingleplayerCountOnce` (experimental, off) | #9987 | In singleplayer, packager arrivals were counted twice. |
 | `gaugeForgetStockWhileBlind` (experimental, off) | #9987 | A packager that briefly couldn't see its inventory counted everything in it as new afterwards. |
 | `linkKeepsWaitingLinks` (experimental, off) | [#5009](https://github.com/Creators-of-Create/Create/issues/5009) | Redstone links in a chunk that was briefly not fully loaded were dropped from their frequency for good, so receivers stopped following their transmitter. |
