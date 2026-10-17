@@ -42,6 +42,11 @@ public class LinkTests {
 			level.setBlockAndUpdate(receiver.below(), Blocks.STONE.defaultBlockState());
 			level.setBlockAndUpdate(receiver, AllBlocks.REDSTONE_LINK.getDefaultState().setValue(BlockStateProperties.FACING, Direction.UP)
 				.setValue(RedstoneLinkBlock.RECEIVER, true));
+			// a link placed without saved data creates its frequency part only when it reads data, so load it from its own save
+			var placed = level.getBlockEntity(receiver);
+			var tag = placed.saveWithFullMetadata(level.registryAccess());
+			level.removeBlockEntity(receiver);
+			level.setBlockEntity(net.minecraft.world.level.block.entity.BlockEntity.loadStatic(receiver, level.getBlockState(receiver), tag, level.registryAccess()));
 		});
 		RedstoneLinkBlockEntity[] be = {null};
 		boolean[] wasHalfLoaded = {false};
