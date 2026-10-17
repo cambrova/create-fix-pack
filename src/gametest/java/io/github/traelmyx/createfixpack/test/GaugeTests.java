@@ -57,7 +57,6 @@ public class GaugeTests {
 			// the 10 ingots are taken out of their slot, and 16 others arrive in the next one
 			inventory.extractItem(0, 10, false);
 			inventory.insertItem(1, new ItemStack(Items.IRON_INGOT, 16), false);
-			System.out.println("[create_fix_pack] gauge debug: cached summary before second check: " + packager.getAvailableItems().getCountOf(new ItemStack(Items.IRON_INGOT)));
 			packager.triggerStockCheck();
 			System.out.println("[create_fix_pack] gauge debug: summary after: " + packager.getAvailableItems().getCountOf(new ItemStack(Items.IRON_INGOT)));
 			int promised = queue[0].getTotalPromisedAndRemoveExpired(new ItemStack(Items.IRON_INGOT), -1);

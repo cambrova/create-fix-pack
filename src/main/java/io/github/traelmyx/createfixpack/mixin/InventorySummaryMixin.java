@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
  */
 @Mixin(value = InventorySummary.class, remap = false)
 public abstract class InventorySummaryMixin {
-	@ModifyArg(method = "add(Lnet/minecraft/world/item/ItemStack;I)V", require = 0,
+	@ModifyArg(method = "add(Lnet/minecraft/world/item/ItemStack;I)V", require = 1,
 		at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/logistics/BigItemStack;<init>(Lnet/minecraft/world/item/ItemStack;I)V"), index = 0)
 	private ItemStack create_fix_pack$copyKey(ItemStack stack) {
 		return CreateFixPack.GAUGE_NO_OVER_REQUEST.on() ? stack.copy() : stack;
