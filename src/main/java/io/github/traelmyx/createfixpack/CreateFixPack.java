@@ -33,8 +33,6 @@ public class CreateFixPack {
 		"Mechanical crafters waiting to put their result into a full inventory no longer drop it on the ground when the world loads.");
 	public static final Fix GAUGE_NO_OVER_REQUEST = fix("gaugeNoOverRequest", "9987", null,
 		"Factory gauges no longer order more than their target because the packager counted items as arrived when some were taken out.");
-	public static final Fix LINK_KEEPS_WAITING_LINKS = fix("linkKeepsWaitingLinks", "5009", null,
-		"Redstone links in a chunk that is briefly not fully loaded are no longer dropped from their frequency for good, so receivers keep following their transmitter.");
 	public static final Fix GAUGE_SINGLEPLAYER_ONCE = experimental(fix("gaugeSingleplayerCountOnce", "9987", null,
 		"Experimental, not covered by a test. In singleplayer, arrivals at a packager are counted once instead of twice. Turn on if gauges in singleplayer clear promises twice as fast as items arrive."));
 	public static final Fix GAUGE_FORGET_WHILE_BLIND = experimental(fix("gaugeForgetStockWhileBlind", "9987", null,
