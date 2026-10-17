@@ -37,9 +37,12 @@ public class LinkTests {
 		BlockPos receiver = new BlockPos(far.getMiddleBlockX(), origin.getY() + 1, far.getMiddleBlockZ());
 		level.setChunkForced(far.x, far.z, true);
 		level.setChunkForced(keeper.x, keeper.z, true);
-		level.setBlockAndUpdate(receiver.below(), Blocks.STONE.defaultBlockState());
-		level.setBlockAndUpdate(receiver, AllBlocks.REDSTONE_LINK.getDefaultState().setValue(BlockStateProperties.FACING, Direction.UP)
-			.setValue(RedstoneLinkBlock.RECEIVER, true));
+		// place the receiver once the forced chunk has fully loaded, so its block entity ticks
+		helper.runAtTickTime(8, () -> {
+			level.setBlockAndUpdate(receiver.below(), Blocks.STONE.defaultBlockState());
+			level.setBlockAndUpdate(receiver, AllBlocks.REDSTONE_LINK.getDefaultState().setValue(BlockStateProperties.FACING, Direction.UP)
+				.setValue(RedstoneLinkBlock.RECEIVER, true));
+		});
 		RedstoneLinkBlockEntity[] be = {null};
 		boolean[] wasHalfLoaded = {false};
 
