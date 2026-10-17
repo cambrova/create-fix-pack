@@ -45,7 +45,15 @@ public class LinkTests {
 
 		helper.runAtTickTime(20, () -> helper.setBlock(POWER, Blocks.REDSTONE_BLOCK));
 		helper.runAtTickTime(26, () -> {
-			System.out.println("[create_fix_pack] link debug baseline: receiver " + ((RedstoneLinkBlockEntity) level.getBlockEntity(receiver)).getReceivedSignal());
+			var rbe = level.getBlockEntity(receiver);
+			var tl = com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour.get(level, TRANSMITTER.offset(origin), com.simibubi.create.content.redstone.link.LinkBehaviour.TYPE);
+			var rl = com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour.get(level, receiver, com.simibubi.create.content.redstone.link.LinkBehaviour.TYPE);
+			System.out.println("[create_fix_pack] link debug baseline: receiver be " + rbe + " loaded " + level.isLoaded(receiver) + " ticking " + level.shouldTickBlocksAt(receiver)
+				+ " signal " + (rbe instanceof RedstoneLinkBlockEntity r ? r.getReceivedSignal() : -1)
+				+ " rlink " + rl + " tlink " + tl + " tsends " + (tl == null ? -1 : tl.getTransmittedStrength())
+				+ " rIn " + (rl != null && com.simibubi.create.Create.REDSTONE_LINK_NETWORK_HANDLER.getNetworkOf(level, rl).contains(rl))
+				+ " tIn " + (tl != null && com.simibubi.create.Create.REDSTONE_LINK_NETWORK_HANDLER.getNetworkOf(level, tl).contains(tl))
+				+ " dist " + Math.sqrt(receiver.distSqr(TRANSMITTER.offset(origin))));
 			helper.setBlock(POWER, Blocks.AIR);
 		});
 		helper.runAtTickTime(30, () -> {
