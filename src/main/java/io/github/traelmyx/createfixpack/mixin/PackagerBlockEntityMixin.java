@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Create #9987, the two other ways a packager clears more promises than items arrived:
+ * Create #9987, the two other ways (experimental, off by default until they have a test) a packager clears more promises than items arrived:
  * <ul>
  * <li>In singleplayer the client copy of the packager also reported arrivals into the shared promise list, so every
  * arrival counted twice. Only the server reports them now.</li>
@@ -27,7 +27,7 @@ public abstract class PackagerBlockEntityMixin {
 	@Inject(method = "submitNewArrivals", at = @At("HEAD"), cancellable = true, require = 0)
 	private void create_fix_pack$serverOnly(InventorySummary before, InventorySummary after, CallbackInfo ci) {
 		BlockEntity self = (BlockEntity) (Object) this;
-		if (CreateFixPack.GAUGE_NO_OVER_REQUEST.on() && self.getLevel() != null && self.getLevel().isClientSide())
+		if (CreateFixPack.GAUGE_SINGLEPLAYER_ONCE.on() && self.getLevel() != null && self.getLevel().isClientSide())
 			ci.cancel();
 	}
 
@@ -35,6 +35,6 @@ public abstract class PackagerBlockEntityMixin {
 		at = @At(value = "FIELD", target = "Lcom/simibubi/create/content/logistics/packager/PackagerBlockEntity;availableItems:Lcom/simibubi/create/content/logistics/packager/InventorySummary;",
 			opcode = Opcodes.PUTFIELD, ordinal = 0))
 	private void create_fix_pack$forgetWhileBlind(PackagerBlockEntity self, InventorySummary empty, Operation<Void> original) {
-		original.call(self, CreateFixPack.GAUGE_NO_OVER_REQUEST.on() ? null : empty);
+		original.call(self, CreateFixPack.GAUGE_FORGET_WHILE_BLIND.on() ? null : empty);
 	}
 }

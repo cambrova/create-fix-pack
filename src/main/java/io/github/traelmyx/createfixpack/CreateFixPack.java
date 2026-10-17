@@ -32,7 +32,11 @@ public class CreateFixPack {
 	public static final Fix CRAFTER_KEEPS_OUTPUT = fix("crafterKeepsOutput", "4510", null,
 		"Mechanical crafters waiting to put their result into a full inventory no longer drop it on the ground when the world loads.");
 	public static final Fix GAUGE_NO_OVER_REQUEST = fix("gaugeNoOverRequest", "9987", null,
-		"Factory gauges no longer order more than their target because the packager counted arrivals that weren't new.");
+		"Factory gauges no longer order more than their target because the packager counted items as arrived when some were taken out.");
+	public static final Fix GAUGE_SINGLEPLAYER_ONCE = experimental(fix("gaugeSingleplayerCountOnce", "9987", null,
+		"Experimental, not covered by a test. In singleplayer, arrivals at a packager are counted once instead of twice. Turn on if gauges in singleplayer clear promises twice as fast as items arrive."));
+	public static final Fix GAUGE_FORGET_WHILE_BLIND = experimental(fix("gaugeForgetStockWhileBlind", "9987", null,
+		"Experimental, not covered by a test. When a packager briefly can't see its inventory, it forgets its stock record instead of remembering it as empty, so the next look doesn't count everything as new. Turn on if a gauge reorders everything after its inventory block was updated."));
 
 	public static final class Fix {
 		public final String key, issue, description;
@@ -51,6 +55,12 @@ public class CreateFixPack {
 		public boolean on() {
 			return enabled && !fixedUpstream;
 		}
+	}
+
+	/** Fixes without a passing test start switched off. */
+	private static Fix experimental(Fix fix) {
+		fix.enabled = false;
+		return fix;
 	}
 
 	private static Fix fix(String key, String issue, String fixedUpstreamIn, String description) {

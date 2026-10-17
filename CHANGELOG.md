@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- The two #9987 fixes that have no test yet (singleplayer double count, packager briefly blind) are now separate experimental switches, off by default.
+
 ## 1.0.0
 
 - Mechanical crafters keep their waiting result when the world loads (Create #4510).

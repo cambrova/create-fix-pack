@@ -7,7 +7,11 @@ Each fix knows which Create issue it fixes. When a Create release fixes that bug
 | Switch | Create issue | What it fixes |
 |---|---|---|
 | `crafterKeepsOutput` | [#4510](https://github.com/Creators-of-Create/Create/issues/4510) | Mechanical crafters waiting to put their result into a full inventory dropped it on the ground when the world loaded. |
-| `gaugeNoOverRequest` | [#9987](https://github.com/Creators-of-Create/Create/issues/9987) | Factory gauges ordered more than their target, because packagers counted items as arrived that weren't new. |
+| `gaugeNoOverRequest` | [#9987](https://github.com/Creators-of-Create/Create/issues/9987) | Factory gauges ordered more than their target, because packagers counted items as arrived when some were taken out. |
+| `gaugeSingleplayerCountOnce` (experimental, off) | #9987 | In singleplayer, packager arrivals were counted twice. |
+| `gaugeForgetStockWhileBlind` (experimental, off) | #9987 | A packager that briefly couldn't see its inventory counted everything in it as new afterwards. |
+
+Experimental fixes have no passing test yet, so they start switched off. They get switched on once they are tested.
 
 Config: `config/create_fix_pack.properties`.
 
