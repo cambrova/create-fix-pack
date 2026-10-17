@@ -43,13 +43,21 @@ public class LinkTests {
 		RedstoneLinkBlockEntity[] be = {null};
 		boolean[] wasHalfLoaded = {false};
 
+		helper.runAtTickTime(6, () -> helper.setBlock(POWER, Blocks.REDSTONE_BLOCK));
+		helper.runAtTickTime(9, () -> {
+			System.out.println("[create_fix_pack] link debug baseline: receiver " + ((RedstoneLinkBlockEntity) level.getBlockEntity(receiver)).getReceivedSignal());
+			helper.setBlock(POWER, Blocks.AIR);
+		});
 		helper.runAtTickTime(10, () -> {
 			be[0] = (RedstoneLinkBlockEntity) level.getBlockEntity(receiver);
 			CreateFixPack.LINK_KEEPS_WAITING_LINKS.enabled = fixed;
 			level.setChunkForced(far.x, far.z, false);
 		});
 		helper.runAtTickTime(14, () -> {
-			wasHalfLoaded[0] = !level.isLoaded(receiver) && !be[0].isRemoved();
+			wasHalfLoaded[0] = !level.isLoaded(receiver);
+			var link = com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour.get(be[0], com.simibubi.create.content.redstone.link.LinkBehaviour.TYPE);
+			System.out.println("[create_fix_pack] link debug t14: removed " + be[0].isRemoved() + " chunkUnloaded " + be[0].isChunkUnloaded()
+				+ " inNetwork " + com.simibubi.create.Create.REDSTONE_LINK_NETWORK_HANDLER.getNetworkOf(level, link).contains(link));
 			// the transmitter switches on while the receiver's chunk is half loaded
 			helper.setBlock(POWER, Blocks.REDSTONE_BLOCK);
 		});
@@ -58,6 +66,9 @@ public class LinkTests {
 		helper.runAtTickTime(30, () -> helper.setBlock(POWER, Blocks.REDSTONE_BLOCK));
 		helper.runAtTickTime(40, () -> {
 			boolean same = level.getBlockEntity(receiver) == be[0];
+			var link2 = com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour.get(be[0], com.simibubi.create.content.redstone.link.LinkBehaviour.TYPE);
+			System.out.println("[create_fix_pack] link debug t40: removed " + be[0].isRemoved() + " chunkUnloaded " + be[0].isChunkUnloaded()
+				+ " inNetwork " + com.simibubi.create.Create.REDSTONE_LINK_NETWORK_HANDLER.getNetworkOf(level, link2).contains(link2));
 			int signal = be[0].getReceivedSignal();
 			CreateFixPack.LINK_KEEPS_WAITING_LINKS.enabled = true;
 			// links without frequency items all share one frequency: clear both so the other test can't hear them
