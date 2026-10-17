@@ -6,7 +6,8 @@
 	"mixins": [
 		"InventorySummaryMixin",
 		"MechanicalCrafterBlockEntityMixin",
-		"PackagerBlockEntityMixin"
+		"PackagerBlockEntityMixin",
+		"RedstoneLinkNetworkHandlerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 0
