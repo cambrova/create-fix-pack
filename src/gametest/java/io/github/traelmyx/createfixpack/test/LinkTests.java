@@ -43,32 +43,32 @@ public class LinkTests {
 		RedstoneLinkBlockEntity[] be = {null};
 		boolean[] wasHalfLoaded = {false};
 
-		helper.runAtTickTime(6, () -> helper.setBlock(POWER, Blocks.REDSTONE_BLOCK));
-		helper.runAtTickTime(9, () -> {
+		helper.runAtTickTime(20, () -> helper.setBlock(POWER, Blocks.REDSTONE_BLOCK));
+		helper.runAtTickTime(26, () -> {
 			System.out.println("[create_fix_pack] link debug baseline: receiver " + ((RedstoneLinkBlockEntity) level.getBlockEntity(receiver)).getReceivedSignal());
 			helper.setBlock(POWER, Blocks.AIR);
 		});
-		helper.runAtTickTime(10, () -> {
+		helper.runAtTickTime(30, () -> {
 			be[0] = (RedstoneLinkBlockEntity) level.getBlockEntity(receiver);
 			CreateFixPack.LINK_KEEPS_WAITING_LINKS.enabled = fixed;
 			level.setChunkForced(far.x, far.z, false);
 		});
-		helper.runAtTickTime(14, () -> {
+		helper.runAtTickTime(34, () -> {
 			wasHalfLoaded[0] = !level.isLoaded(receiver);
 			var link = com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour.get(be[0], com.simibubi.create.content.redstone.link.LinkBehaviour.TYPE);
 			System.out.println("[create_fix_pack] link debug t14: removed " + be[0].isRemoved() + " chunkUnloaded " + be[0].isChunkUnloaded()
-				+ " inNetwork " + com.simibubi.create.Create.REDSTONE_LINK_NETWORK_HANDLER.getNetworkOf(level, link).contains(link));
+				+ " inNetwork " + (link != null && com.simibubi.create.Create.REDSTONE_LINK_NETWORK_HANDLER.getNetworkOf(level, link).contains(link)));
 			// the transmitter switches on while the receiver's chunk is half loaded
 			helper.setBlock(POWER, Blocks.REDSTONE_BLOCK);
 		});
-		helper.runAtTickTime(16, () -> level.setChunkForced(far.x, far.z, true));
-		helper.runAtTickTime(24, () -> helper.setBlock(POWER, Blocks.AIR));
-		helper.runAtTickTime(30, () -> helper.setBlock(POWER, Blocks.REDSTONE_BLOCK));
-		helper.runAtTickTime(40, () -> {
+		helper.runAtTickTime(36, () -> level.setChunkForced(far.x, far.z, true));
+		helper.runAtTickTime(44, () -> helper.setBlock(POWER, Blocks.AIR));
+		helper.runAtTickTime(50, () -> helper.setBlock(POWER, Blocks.REDSTONE_BLOCK));
+		helper.runAtTickTime(60, () -> {
 			boolean same = level.getBlockEntity(receiver) == be[0];
 			var link2 = com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour.get(be[0], com.simibubi.create.content.redstone.link.LinkBehaviour.TYPE);
 			System.out.println("[create_fix_pack] link debug t40: removed " + be[0].isRemoved() + " chunkUnloaded " + be[0].isChunkUnloaded()
-				+ " inNetwork " + com.simibubi.create.Create.REDSTONE_LINK_NETWORK_HANDLER.getNetworkOf(level, link2).contains(link2));
+				+ " inNetwork " + (link2 != null && com.simibubi.create.Create.REDSTONE_LINK_NETWORK_HANDLER.getNetworkOf(level, link2).contains(link2)));
 			int signal = be[0].getReceivedSignal();
 			CreateFixPack.LINK_KEEPS_WAITING_LINKS.enabled = true;
 			// links without frequency items all share one frequency: clear both so the other test can't hear them
@@ -90,12 +90,12 @@ public class LinkTests {
 		void check(int signal);
 	}
 
-	@GameTest(template = "empty", timeoutTicks = 80, batch = "link_fixed")
+	@GameTest(template = "empty", timeoutTicks = 100, batch = "link_fixed")
 	public static void receiverFollowsAfterHalfLoad(GameTestHelper helper) {
 		run(helper, true, 0, signal -> helper.assertTrue(signal == 15, "the receiver reads " + signal + ", the transmitter sends 15"));
 	}
 
-	@GameTest(template = "empty", timeoutTicks = 80, batch = "link_control")
+	@GameTest(template = "empty", timeoutTicks = 100, batch = "link_control")
 	public static void linkControlReproducesBug(GameTestHelper helper) {
 		// without the fix the receiver must have lost its frequency, or this test can't tell the fix works
 		run(helper, false, 1, signal -> helper.assertTrue(signal == 0, "the receiver still follows without the fix (" + signal + "): the bug did not reproduce"));
